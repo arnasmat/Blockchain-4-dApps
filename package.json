@@ -1,0 +1,15 @@
+{
+  "name": "blockchain4",
+  "version": "1.0.0",
+  "description": "Blockchain university course 4th practical task",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
