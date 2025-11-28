@@ -81,4 +81,21 @@ contract CrowdSourcing {
             milestone.reached = false;
         }
     }
+
+    function fundProject(
+        uint _projectIdx
+    ) external payable {
+        require(_projectIdx < projects.length, "Project doesn't exist");
+        require(msg.value >= msg.sender.balance, "You dont have enough money to fund");
+        require(msg.value > 0, "Fund amount can't be 0");
+
+        Project storage project = projects[_projectIdx];
+        require(project.isActive, "Project must be active to fund");
+
+        Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
+
+        currentMilestone.funders[msg.sender] += msg.value;
+        currentMilestone.totalFunded += msg.value;
+        project.totalFunded += msg.value;
+    }
 }
