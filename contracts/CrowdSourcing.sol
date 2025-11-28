@@ -82,7 +82,7 @@ contract CrowdSourcing {
         }
     }
 
-    function fundProject(
+    function fundProject (
         uint _projectIdx
     ) external payable {
         require(_projectIdx < projects.length, "Project doesn't exist");
@@ -98,4 +98,42 @@ contract CrowdSourcing {
         currentMilestone.totalFunded += msg.value;
         project.totalFunded += msg.value;
     }
+
+    function checkMilestone(
+        uint _projectIdx
+    ) external  {
+        Project storage project = projects[_projectIdx];
+        Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
+        require(project.isActive, "Project must be active");
+        require(!currentMilestone.reached, "Milestone should be not reached");
+        require(currentMilestone.info.goalAmount > currentMilestone.totalFunded, "Milestone shouldn't be funded to refund");
+
+// also gal cia geriau perdaryt ne su ifais o su require?? kzn as nzn kada even naudot ifus
+        if(block.timestamp >= currentMilestone.info.deadline) {
+            if(currentMilestone.totalFunded >= currentMilestone.info.goalAmount) {
+                currentMilestone.reached = true;
+                // todo: figure out how to make this send money to the owner lol
+                // project.creator
+                if(project.currentMilestoneIndex < project.milestones.length){
+                    project.currentMilestoneIndex++;
+                } else {
+                    // close project after all milestones
+                    project.isActive = false;
+                }
+            } else {
+            // cancel if milestone not reached after timestamp
+            project.isActive = false;
+            // todo: refund funkcija visiems
+        }
+        } 
+    }
+
+    /*
+    TODO LIST:
+    - visi todo's check milestone
+    - refundinimo funckijos
+    - kzn gal reik padaryt, kad sysowneris galetu killint projektus jeigu kzn jie scam ir auto refundintu visus pinigus? idk
+    - daug kitu dalyku. visa logika
+    - pratestuot ar tai kas egizstuoja veikia lmao
+    */
 }

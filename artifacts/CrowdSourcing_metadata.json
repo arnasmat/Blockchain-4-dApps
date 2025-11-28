@@ -13,6 +13,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_projectIdx",
+						"type": "uint256"
+					}
+				],
+				"name": "checkMilestone",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "_name",
 						"type": "string"
@@ -38,6 +51,19 @@
 				"name": "createProject",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectIdx",
+						"type": "uint256"
+					}
+				],
+				"name": "fundProject",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -121,11 +147,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0x981d0010d52266ade022cf91d6382d3317d89e4ff150ace4539727bd67704c69",
+			"keccak256": "0x350cd38da9a0c3d0ee2ad4dadacd544c0d7eff6e664340bc5c2fe389a5f3766e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://db29f4b3b7f4eac6d91789b6a567dc6d845137d64b167b13224713918245d458",
-				"dweb:/ipfs/QmbJ5U4fu3DFAcNVgB7ekkxKhsc4n514H4ati5wjqZ48ro"
+				"bzz-raw://11fab531502e6bc43fc4b7565b162fa49ab4f38249a1ef77cc28d47aeb246771",
+				"dweb:/ipfs/QmS3c7ZW9PLRpcRkQnU7JTMLzZHA3XtxdN4wJB1PhUXHiH"
 			]
 		}
 	},
