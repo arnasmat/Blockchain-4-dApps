@@ -1,4 +1,5 @@
-pragma solidity ^0.4.17;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
 
 // taken from https://github.com/fabiojose/ethereum-ex/blob/master/contracts/Migrations.sol
 contract Migrations {
@@ -9,7 +10,7 @@ contract Migrations {
     if (msg.sender == owner) _;
   }
 
-  function Migrations() public {
+  constructor() {
     owner = msg.sender;
   }
 
