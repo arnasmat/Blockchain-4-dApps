@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.13;
 /*
     Crowdsourcing with milestones, expected logic:
     - There is a general system owner, who owns the crowdsourcing "page"
@@ -41,7 +41,7 @@ struct Milestone{
     MilestoneInfo info;
     uint totalFunded;
     address[] funderAddresses;
-    mapping(address funderAddress => uint amount) funders;
+    mapping(address => uint) funders; //adress -> amount funded
     bool reached;
 }
 
@@ -94,11 +94,14 @@ contract CrowdSourcing {
         require(project.isActive, "Project must be active to fund");
 
         Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
-        require(currentMilestone.info.deadline < block.timestamp, "You can't fund after deadline");
+        require(currentMilestone.info.deadline > block.timestamp, "You can't fund after deadline");
 
         currentMilestone.funders[msg.sender] += msg.value;
         currentMilestone.totalFunded += msg.value;
         project.totalFunded += msg.value;
+	if(currentMilestone.funders[msg.sender] == 0) {
+    		currentMilestone.funderAddresses.push(msg.sender);
+	}
     }
 
     function checkMilestone(
