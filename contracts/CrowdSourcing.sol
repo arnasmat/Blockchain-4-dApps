@@ -50,10 +50,6 @@ struct MilestoneInfo{
     uint deadline;
 }
 
-event MilestoneReached(uint indexed projectIdx, uint indexed milestoneIdx, uint amount);
-event MilestoneRefunded(uint indexed projectIdx, uint indexed milestoneIdx, address[] funders);
-event ProjectCancelled(uint indexed projectIdx);
-
 contract CrowdSourcing {
     address public sysOwner;
 
@@ -123,7 +119,6 @@ contract CrowdSourcing {
                 if(project.currentMilestoneIndex < project.milestones.length - 1){
                     currentMilestone.reached = true;
                     project.currentMilestoneIndex++;
-                    emit MilestoneReached(_projectIdx, project.currentMilestoneIndex, currentMilestone.totalFunded);
                 } else {
                     // close project after all milestones
                     project.isActive = false;
@@ -133,7 +128,6 @@ contract CrowdSourcing {
             // cancel if milestone not reached after timestamp
             project.isActive = false;
             refundMilestone(_projectIdx, project.currentMilestoneIndex);
-            emit ProjectCancelled(_projectIdx);
         }
     }
 
@@ -154,7 +148,6 @@ contract CrowdSourcing {
                 require(success, "Refund failed");
             }
         }
-        emit MilestoneRefunded(_projectIdx, _milestoneIdx, milestone.funderAddresses);
     }
 
     /*
