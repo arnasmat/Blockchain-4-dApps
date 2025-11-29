@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
+pragma solidity ^0.8.21;
 
 // taken from https://github.com/fabiojose/ethereum-ex/blob/master/contracts/Migrations.sol
 contract Migrations {

@@ -210,11 +210,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0x613f3785b6abd721d8380acae678e5332d5a86bd5e5b449e4ef2e9ba036b93ae",
+			"keccak256": "0x71c36eafb658b257a6ccd75aa83b23b6c1bf6210b96922135f276f59536234a1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0f5090172bbb73517f2af282fafec9a06869c56eae777964c7f279f7bbce6b17",
-				"dweb:/ipfs/QmQvNTihZMGvdpmpTgGQngG9WpjVJiRMo638t9cZ1kBbWU"
+				"bzz-raw://266cae2cb13a61dabb9ec37d0fcd1bda56aba96da54b4dbfa743617e630d99f3",
+				"dweb:/ipfs/QmRcAiP2KszpiL6vLEEFWr2Q3D4rk2kjxZyTXENKVza6Xf"
 			]
 		}
 	},

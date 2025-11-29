@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
+pragma solidity ^0.8.21;
 /*
     Crowdsourcing with milestones, expected logic:
     - There is a general system owner, who owns the crowdsourcing "page"
