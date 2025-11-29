@@ -40,6 +40,7 @@ struct Project {
 struct Milestone{
     MilestoneInfo info;
     uint totalFunded;
+    address[] funderAddresses;
     mapping(address funderAddress => uint amount) funders;
     bool reached;
 }
@@ -48,6 +49,10 @@ struct MilestoneInfo{
     uint goalAmount;
     uint deadline;
 }
+
+event MilestoneReached(uint indexed projectIdx, uint indexed milestoneIdx, uint amount);
+event MilestoneRefunded(uint indexed projectIdx, uint indexed milestoneIdx, address[] funders);
+event ProjectCancelled(uint indexed projectIdx);
 
 contract CrowdSourcing {
     address public sysOwner;
@@ -86,13 +91,14 @@ contract CrowdSourcing {
         uint _projectIdx
     ) external payable {
         require(_projectIdx < projects.length, "Project doesn't exist");
-        require(msg.value >= msg.sender.balance, "You dont have enough money to fund");
+        require(msg.value <= msg.sender.balance, "You dont have enough money to fund");
         require(msg.value > 0, "Fund amount can't be 0");
 
         Project storage project = projects[_projectIdx];
         require(project.isActive, "Project must be active to fund");
 
         Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
+        require(currentMilestone.info.deadline < block.timestamp, "You can't fund after deadline");
 
         currentMilestone.funders[msg.sender] += msg.value;
         currentMilestone.totalFunded += msg.value;
@@ -106,26 +112,49 @@ contract CrowdSourcing {
         Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
         require(project.isActive, "Project must be active");
         require(!currentMilestone.reached, "Milestone should be not reached");
-        require(currentMilestone.info.goalAmount > currentMilestone.totalFunded, "Milestone shouldn't be funded to refund");
-
+        require(block.timestamp >= currentMilestone.info.deadline, "Can only chekck after milestone");
 // also gal cia geriau perdaryt ne su ifais o su require?? kzn as nzn kada even naudot ifus
-        if(block.timestamp >= currentMilestone.info.deadline) {
             if(currentMilestone.totalFunded >= currentMilestone.info.goalAmount) {
                 currentMilestone.reached = true;
+                (bool success, ) = project.creator.call{value: currentMilestone.totalFunded}("");
+                require(success, "Transfer to creator failed");
                 // todo: figure out how to make this send money to the owner lol
                 // project.creator
-                if(project.currentMilestoneIndex < project.milestones.length){
+                if(project.currentMilestoneIndex < project.milestones.length - 1){
+                    currentMilestone.reached = true;
                     project.currentMilestoneIndex++;
+                    emit MilestoneReached(_projectIdx, project.currentMilestoneIndex, currentMilestone.totalFunded);
                 } else {
                     // close project after all milestones
                     project.isActive = false;
+                    
                 }
             } else {
             // cancel if milestone not reached after timestamp
             project.isActive = false;
-            // todo: refund funkcija visiems
+            refundMilestone(_projectIdx, project.currentMilestoneIndex);
+            emit ProjectCancelled(_projectIdx);
         }
-        } 
+    }
+
+    function refundMilestone(
+        uint _projectIdx,
+        uint _milestoneIdx
+    ) private {
+        Project storage project = projects[_projectIdx];
+        Milestone storage milestone = project.milestones[_milestoneIdx];
+
+        for(uint i=0; i<milestone.funderAddresses.length; i++){
+            address funder = milestone.funderAddresses[i];
+            uint amount = milestone.funders[funder];
+
+            if(amount > 0) {
+                milestone.funders[funder] = 0;
+                (bool success, ) = funder.call{value: amount}("");
+                require(success, "Refund failed");
+            }
+        }
+        emit MilestoneRefunded(_projectIdx, _milestoneIdx, milestone.funderAddresses);
     }
 
     /*
