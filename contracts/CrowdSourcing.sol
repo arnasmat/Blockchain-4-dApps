@@ -227,7 +227,6 @@ contract CrowdSourcing {
 
     /*
     TODO LIST:
-    - kzn gal reik padaryt, kad sysowneris galetu killint projektus jeigu kzn jie scam ir auto refundintu visus pinigus? idk
     - daug kitu dalyku. visa logika
     - pratestuot ar tai kas egizstuoja veikia lmao
     */
