@@ -40,7 +40,7 @@ struct Project {
 
 struct Milestone {
     MilestoneInfo info;
-    uint totalFunded;
+    uint totalFunded; // only current milestone total funded, used to transfer money to owner only lol
     address[] funderAddresses;
     mapping(address => uint) funders; //adress -> amount funded
     bool reached;
@@ -52,6 +52,22 @@ struct MilestoneInfo {
 }
 
 contract CrowdSourcing {
+    event ProjectCreated(uint projectIdx);
+
+    event ProjectFunded(
+        uint projectIdx,
+        uint amount,
+        uint totalFunded,
+        uint currentMilestoneTotalFunded
+    );
+
+    event CurrentMilestoneStatus(
+        uint deadline,
+        uint goalAmount,
+        uint totalFunded,
+        uint currentMileStoneTotalFunded
+    );
+
     address public sysOwner;
 
     Project[] public projects;
@@ -85,6 +101,8 @@ contract CrowdSourcing {
             milestone.totalFunded = 0;
             milestone.reached = false;
         }
+
+        emit ProjectCreated(projects.length);
     }
 
     function fundProject(uint _projectIdx) external payable {
@@ -112,8 +130,32 @@ contract CrowdSourcing {
         if (currentMilestone.funders[msg.sender] == 0) {
             currentMilestone.funderAddresses.push(msg.sender);
         }
+
+        emit ProjectFunded(
+            _projectIdx,
+            msg.value,
+            project.totalFunded,
+            currentMilestone.totalFunded
+        );
     }
 
+    function checkCurrentMilestone(uint _projectIdx) external {
+        Project storage project = projects[_projectIdx];
+        require(project.isActive, "Project must be active");
+        Milestone storage currentMilestone = project.milestones[
+            project.currentMilestoneIndex
+        ];
+        require(!currentMilestone.reached, "Milestone should be not reached");
+
+        emit CurrentMilestoneStatus(
+            currentMilestone.info.deadline,
+            currentMilestone.info.goalAmount,
+            project.totalFunded,
+            currentMilestone.totalFunded
+        );
+    }
+
+    // TODO: sita reiks pervadint, nes cia bsk neaisku, bet cia mzdg triggerina logika pinigeliu davimo ir pns lol
     function checkMilestone(uint _projectIdx) external {
         Project storage project = projects[_projectIdx];
         Milestone storage currentMilestone = project.milestones[
