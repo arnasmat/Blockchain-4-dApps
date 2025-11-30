@@ -29,15 +29,16 @@ pragma solidity ^0.8.13;
 
 struct Project {
     address creator;
-    string name;    
+    string name;
+    string headerImageUrl;
+    string description;
     uint totalFunded;
     uint currentMilestoneIndex;
     Milestone[] milestones;
-
     bool isActive; // i.e. not cancelled
 }
 
-struct Milestone{
+struct Milestone {
     MilestoneInfo info;
     uint totalFunded;
     address[] funderAddresses;
@@ -45,7 +46,7 @@ struct Milestone{
     bool reached;
 }
 
-struct MilestoneInfo{
+struct MilestoneInfo {
     uint goalAmount;
     uint deadline;
 }
@@ -61,6 +62,8 @@ contract CrowdSourcing {
 
     function createProject(
         string memory _name,
+        string memory _headerImageUrl,
+        string memory _description,
         MilestoneInfo[] memory _milestones
     ) external {
         require(msg.sender != sysOwner, "System owner can't create projects");
@@ -69,12 +72,13 @@ contract CrowdSourcing {
         Project storage project = projects.push();
         project.creator = msg.sender;
         project.name = _name;
+        project.headerImageUrl = _headerImageUrl;
+        project.description = _description;
         project.totalFunded = 0;
         project.currentMilestoneIndex = 0;
         project.isActive = true;
 
-
-        for(uint i=0; i< _milestones.length; i++){
+        for (uint i = 0; i < _milestones.length; i++) {
             Milestone storage milestone = project.milestones.push();
             milestone.info.goalAmount = _milestones[i].goalAmount;
             milestone.info.deadline = _milestones[i].deadline;
@@ -83,69 +87,78 @@ contract CrowdSourcing {
         }
     }
 
-    function fundProject (
-        uint _projectIdx
-    ) external payable {
+    function fundProject(uint _projectIdx) external payable {
         require(_projectIdx < projects.length, "Project doesn't exist");
-        require(msg.value <= msg.sender.balance, "You dont have enough money to fund");
+        require(
+            msg.value <= msg.sender.balance,
+            "You dont have enough money to fund"
+        );
         require(msg.value > 0, "Fund amount can't be 0");
 
         Project storage project = projects[_projectIdx];
         require(project.isActive, "Project must be active to fund");
 
-        Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
-        require(currentMilestone.info.deadline > block.timestamp, "You can't fund after deadline");
+        Milestone storage currentMilestone = project.milestones[
+            project.currentMilestoneIndex
+        ];
+        require(
+            currentMilestone.info.deadline > block.timestamp,
+            "You can't fund after deadline"
+        );
 
         currentMilestone.funders[msg.sender] += msg.value;
         currentMilestone.totalFunded += msg.value;
         project.totalFunded += msg.value;
-	if(currentMilestone.funders[msg.sender] == 0) {
-    		currentMilestone.funderAddresses.push(msg.sender);
-	}
-    }
-
-    function checkMilestone(
-        uint _projectIdx
-    ) external  {
-        Project storage project = projects[_projectIdx];
-        Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
-        require(project.isActive, "Project must be active");
-        require(!currentMilestone.reached, "Milestone should be not reached");
-        require(block.timestamp >= currentMilestone.info.deadline, "Can only chekck after milestone");
-// also gal cia geriau perdaryt ne su ifais o su require?? kzn as nzn kada even naudot ifus
-            if(currentMilestone.totalFunded >= currentMilestone.info.goalAmount) {
-                currentMilestone.reached = true;
-                (bool success, ) = project.creator.call{value: currentMilestone.totalFunded}("");
-                require(success, "Transfer to creator failed");
-                // todo: figure out how to make this send money to the owner lol
-                // project.creator
-                if(project.currentMilestoneIndex < project.milestones.length - 1){
-                    currentMilestone.reached = true;
-                    project.currentMilestoneIndex++;
-                } else {
-                    // close project after all milestones
-                    project.isActive = false;
-                    
-                }
-            } else {
-            // cancel if milestone not reached after timestamp
-            project.isActive = false;
-            refundMilestone(_projectIdx, project.currentMilestoneIndex);
+        if (currentMilestone.funders[msg.sender] == 0) {
+            currentMilestone.funderAddresses.push(msg.sender);
         }
     }
 
-    function refundMilestone(
-        uint _projectIdx,
-        uint _milestoneIdx
+    function checkMilestone(uint _projectIdx) external {
+        Project storage project = projects[_projectIdx];
+        Milestone storage currentMilestone = project.milestones[
+            project.currentMilestoneIndex
+        ];
+        require(project.isActive, "Project must be active");
+        require(!currentMilestone.reached, "Milestone should be not reached");
+        require(
+            block.timestamp >= currentMilestone.info.deadline,
+            "Can only chekck after milestone"
+        );
+
+        if (project.totalFunded >= currentMilestone.info.goalAmount) {
+            currentMilestone.reached = true;
+            sendMoneyToOwner(project.creator, currentMilestone.totalFunded);
+
+            if (project.currentMilestoneIndex < project.milestones.length - 1) {
+                project.currentMilestoneIndex++;
+            } else {
+                // project is "done" after being fully funded
+                project.isActive = false;
+            }
+        } else {
+            // cancel if milestone not reached after timestamp
+            stopProjectHelper(_projectIdx);
+        }
+    }
+
+    function sendMoneyToOwner(
+        address projectCreator,
+        uint moneyAmount
     ) private {
+        (bool success, ) = projectCreator.call{value: moneyAmount}("");
+        require(success, "Transfer to creator failed");
+    }
+
+    function refundMilestone(uint _projectIdx, uint _milestoneIdx) private {
         Project storage project = projects[_projectIdx];
         Milestone storage milestone = project.milestones[_milestoneIdx];
 
-        for(uint i=0; i<milestone.funderAddresses.length; i++){
+        for (uint i = 0; i < milestone.funderAddresses.length; i++) {
             address funder = milestone.funderAddresses[i];
             uint amount = milestone.funders[funder];
 
-            if(amount > 0) {
+            if (amount > 0) {
                 milestone.funders[funder] = 0;
                 (bool success, ) = funder.call{value: amount}("");
                 require(success, "Refund failed");
@@ -153,10 +166,25 @@ contract CrowdSourcing {
         }
     }
 
+    // To stop projects that the sysOwner deems as scams/illega/whatever
+    // or for when project owners realize they aren't feasible or smt idk
+    function stopProject(uint _projectIdx) external {
+        require(
+            msg.sender == sysOwner ||
+                msg.sender == projects[_projectIdx].creator,
+            "Only system owner or project owner can stop projects"
+        );
+        stopProjectHelper(_projectIdx);
+    }
+
+    function stopProjectHelper(uint _projectIdx) private {
+        Project storage project = projects[_projectIdx];
+        project.isActive = false;
+        refundMilestone(_projectIdx, project.currentMilestoneIndex);
+    }
+
     /*
     TODO LIST:
-    - visi todo's check milestone
-    - refundinimo funckijos
     - kzn gal reik padaryt, kad sysowneris galetu killint projektus jeigu kzn jie scam ir auto refundintu visus pinigus? idk
     - daug kitu dalyku. visa logika
     - pratestuot ar tai kas egizstuoja veikia lmao
