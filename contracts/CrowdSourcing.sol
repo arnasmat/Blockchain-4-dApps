@@ -42,7 +42,7 @@ struct Milestone {
     MilestoneInfo info;
     uint totalFunded; // only current milestone total funded, used to transfer money to owner only lol
     address[] funderAddresses;
-    mapping(address => uint) funders; //adress -> amount funded
+    mapping(address => uint) funders; // adress amount funded
     bool reached;
 }
 
@@ -84,6 +84,13 @@ contract CrowdSourcing {
     ) external {
         require(msg.sender != sysOwner, "System owner can't create projects");
         require(_milestones.length > 0, "Must have at least one milestone");
+        for (uint i = 0; i < _milestones.length; i++) {
+            require(_milestones[i].goalAmount > 0, "Goal amount can't be 0");
+            require(
+                _milestones[i].deadline > block.timestamp,
+                "Deadline can't be in the past"
+            );
+        }
 
         Project storage project = projects.push();
         project.creator = msg.sender;
