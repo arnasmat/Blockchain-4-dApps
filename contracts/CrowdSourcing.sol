@@ -131,12 +131,12 @@ contract CrowdSourcing {
             "You can't fund after deadline"
         );
 
-        currentMilestone.funders[msg.sender] += msg.value;
-        currentMilestone.totalFunded += msg.value;
-        project.totalFunded += msg.value;
         if (currentMilestone.funders[msg.sender] == 0) {
             currentMilestone.funderAddresses.push(msg.sender);
         }
+        currentMilestone.funders[msg.sender] += msg.value;
+        currentMilestone.totalFunded += msg.value;
+        project.totalFunded += msg.value;
 
         emit ProjectFunded(
             _projectIdx,
