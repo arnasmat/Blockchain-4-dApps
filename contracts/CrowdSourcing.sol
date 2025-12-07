@@ -130,13 +130,35 @@ contract CrowdSourcing {
             currentMilestone.info.deadline > block.timestamp,
             "You can't fund after deadline"
         );
-
+     
         if (currentMilestone.funders[msg.sender] == 0) {
             currentMilestone.funderAddresses.push(msg.sender);
         }
+
         currentMilestone.funders[msg.sender] += msg.value;
         currentMilestone.totalFunded += msg.value;
         project.totalFunded += msg.value;
+
+        while(project.totalFunded > currentMilestone.info.goalAmount) {
+
+            uint surplus = project.totalFunded - currentMilestone.info.goalAmount;
+            currentMilestone.totalFunded = currentMilestone.info.goalAmount;
+            project.totalFunded = currentMilestone.info.goalAmount;
+            currentMilestone.funders[msg.sender] -= surplus;
+            
+            if(project.currentMilestoneIndex == project.milestones.length - 1) {
+                project.isActive = false;
+                (bool success, ) = msg.sender.call{value: surplus}("");
+                require(success, "Failed to return surplus");    
+            } else {
+                initiateNextMilestone(_projectIdx);
+                currentMilestone = project.milestones[project.currentMilestoneIndex];
+                currentMilestone.funderAddresses.push(msg.sender);
+                currentMilestone.funders[msg.sender] += surplus;
+                currentMilestone.totalFunded += surplus;
+                project.totalFunded += surplus;
+            }
+        }
 
         emit ProjectFunded(
             _projectIdx,
@@ -162,22 +184,20 @@ contract CrowdSourcing {
         );
     }
 
-    // TODO: sita reiks pervadint, nes cia bsk neaisku, bet cia mzdg triggerina logika pinigeliu davimo ir pns lol
-    function checkMilestone(uint _projectIdx) external {
+    //this function will be used only to move onto next milestone once one was completed
+    function initiateNextMilestone(uint _projectIdx) private {
         Project storage project = projects[_projectIdx];
         Milestone storage currentMilestone = project.milestones[
             project.currentMilestoneIndex
         ];
-        require(project.isActive, "Project must be active");
-        require(!currentMilestone.reached, "Milestone should be not reached");
-        require(
-            block.timestamp >= currentMilestone.info.deadline,
-            "Can only chekck after milestone"
-        );
-
+        uint moneyAmountToSend = currentMilestone.totalFunded;
+        if(project.currentMilestoneIndex > 0) {
+            moneyAmountToSend -= project.milestones[project.currentMilestoneIndex - 1].totalFunded;
+        }
+    
         if (project.totalFunded >= currentMilestone.info.goalAmount) {
             currentMilestone.reached = true;
-            sendMoneyToOwner(project.creator, currentMilestone.totalFunded);
+            sendMoneyToOwner(project.creator, moneyAmountToSend);
 
             if (project.currentMilestoneIndex < project.milestones.length - 1) {
                 project.currentMilestoneIndex++;

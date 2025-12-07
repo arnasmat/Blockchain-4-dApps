@@ -14,15 +14,53 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "projectIdx",
+						"name": "deadline",
 						"type": "uint256"
 					},
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "milestoneIdx",
+						"name": "goalAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalFunded",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "currentMileStoneTotalFunded",
+						"type": "uint256"
+					}
+				],
+				"name": "CurrentMilestoneStatus",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "projectIdx",
+						"type": "uint256"
+					}
+				],
+				"name": "ProjectCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "projectIdx",
 						"type": "uint256"
 					},
 					{
@@ -30,47 +68,21 @@
 						"internalType": "uint256",
 						"name": "amount",
 						"type": "uint256"
-					}
-				],
-				"name": "MilestoneReached",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "uint256",
-						"name": "projectIdx",
-						"type": "uint256"
 					},
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "milestoneIdx",
+						"name": "totalFunded",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
-						"internalType": "address[]",
-						"name": "funders",
-						"type": "address[]"
-					}
-				],
-				"name": "MilestoneRefunded",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
 						"internalType": "uint256",
-						"name": "projectIdx",
+						"name": "currentMilestoneTotalFunded",
 						"type": "uint256"
 					}
 				],
-				"name": "ProjectCancelled",
+				"name": "ProjectFunded",
 				"type": "event"
 			},
 			{
@@ -81,7 +93,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "checkMilestone",
+				"name": "checkCurrentMilestone",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -91,6 +103,16 @@
 					{
 						"internalType": "string",
 						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_headerImageUrl",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
 						"type": "string"
 					},
 					{
@@ -150,6 +172,16 @@
 						"type": "string"
 					},
 					{
+						"internalType": "string",
+						"name": "headerImageUrl",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
 						"internalType": "uint256",
 						"name": "totalFunded",
 						"type": "uint256"
@@ -166,6 +198,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectIdx",
+						"type": "uint256"
+					}
+				],
+				"name": "stopProject",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -210,11 +255,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0x71c36eafb658b257a6ccd75aa83b23b6c1bf6210b96922135f276f59536234a1",
+			"keccak256": "0x2dccd49296ad7589d60d900f1854b5060399069c223ac541a095de75e366bc9b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://266cae2cb13a61dabb9ec37d0fcd1bda56aba96da54b4dbfa743617e630d99f3",
-				"dweb:/ipfs/QmRcAiP2KszpiL6vLEEFWr2Q3D4rk2kjxZyTXENKVza6Xf"
+				"bzz-raw://084c245934f7304c1bf5c47086315c920727a25737bb25352feea40d57fee1eb",
+				"dweb:/ipfs/QmVJkrxpzDopd89iv8DPGkS6HNGFtzWSPynEwuib2LGUrm"
 			]
 		}
 	},
