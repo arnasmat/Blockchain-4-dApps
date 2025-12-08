@@ -235,6 +235,12 @@ contract CrowdSourcing {
         }
     }
 
+    function getCurrentMilestoneFunders(uint _projectIdx) public view returns (MilestoneInfo memory) {
+        Project storage project = projects[_projectIdx];
+        require(project.isActive, "Cannot view inactive project");
+        return project.milestones[project.currentMilestoneIndex].info ;
+    }
+
     // To stop projects that the sysOwner deems as scams/illega/whatever
     // or for when project owners realize they aren't feasible or smt idk
     function stopProject(uint _projectIdx) external {
@@ -248,6 +254,7 @@ contract CrowdSourcing {
 
     function stopProjectHelper(uint _projectIdx) private {
         Project storage project = projects[_projectIdx];
+        require(project.isActive, "Cannot stop inactive project");
         project.isActive = false;
         refundMilestone(_projectIdx, project.currentMilestoneIndex);
     }
