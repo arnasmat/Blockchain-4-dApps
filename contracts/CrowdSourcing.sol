@@ -27,6 +27,7 @@ pragma solidity ^0.8.13;
     PC1 keeps 101 eur from before.
 */
 
+
 struct Project {
     address creator;
     string name;
@@ -36,6 +37,16 @@ struct Project {
     uint currentMilestoneIndex;
     Milestone[] milestones;
     bool isActive; // i.e. not cancelled
+}
+
+struct ProjectView {
+    address creator;
+    string name;
+    string headerImageUrl;
+    string description;
+    uint totalFunded;
+    uint currentMilestoneIndex;
+    bool isActive;
 }
 
 struct Milestone {
@@ -52,10 +63,10 @@ struct MilestoneInfo {
 }
 
 contract CrowdSourcing {
-    event ProjectCreated(uint projectIdx);
+    event ProjectCreated(uint projectIndex);
 
     event ProjectFunded(
-        uint projectIdx,
+        uint projectIndex,
         uint amount,
         uint totalFunded,
         uint currentMilestoneTotalFunded
@@ -77,50 +88,36 @@ contract CrowdSourcing {
     }
 
     function createProject(
-        string memory _name,
-        string memory _headerImageUrl,
-        string memory _description,
-        MilestoneInfo[] memory _milestones
+        string memory name,
+        string memory headerImageUrl,
+        string memory description,
+        MilestoneInfo[] memory milestones
     ) external {
         require(msg.sender != sysOwner, "System owner can't create projects");
-        require(_milestones.length > 0, "Must have at least one milestone");
-        for (uint i = 0; i < _milestones.length; i++) {
-            require(_milestones[i].goalAmount > 0, "Goal amount can't be 0");
-            require(
-                _milestones[i].deadline > block.timestamp,
-                "Deadline can't be in the past"
-            );
-        }
 
         Project storage project = projects.push();
         project.creator = msg.sender;
-        project.name = _name;
-        project.headerImageUrl = _headerImageUrl;
-        project.description = _description;
+        project.name = name;
+        project.headerImageUrl = headerImageUrl;
+        project.description = description;
         project.totalFunded = 0;
         project.currentMilestoneIndex = 0;
         project.isActive = true;
 
-        for (uint i = 0; i < _milestones.length; i++) {
-            Milestone storage milestone = project.milestones.push();
-            milestone.info.goalAmount = _milestones[i].goalAmount;
-            milestone.info.deadline = _milestones[i].deadline;
-            milestone.totalFunded = 0;
-            milestone.reached = false;
-        }
+        addNewMilestones(projects.length-1 , milestones);
 
         emit ProjectCreated(projects.length);
     }
 
-    function fundProject(uint _projectIdx) external payable {
-        require(_projectIdx < projects.length, "Project doesn't exist");
+    function fundProject(uint projectIndex) external payable {
+        require(projectIndex < projects.length, "Project doesn't exist");
         require(
             msg.value <= msg.sender.balance,
             "You dont have enough money to fund"
         );
         require(msg.value > 0, "Fund amount can't be 0");
 
-        Project storage project = projects[_projectIdx];
+        Project storage project = projects[projectIndex];
         require(project.isActive, "Project must be active to fund");
 
         Milestone storage currentMilestone = project.milestones[
@@ -151,7 +148,7 @@ contract CrowdSourcing {
                 (bool success, ) = msg.sender.call{value: surplus}("");
                 require(success, "Failed to return surplus");    
             } else {
-                initiateNextMilestone(_projectIdx);
+                initiateNextMilestone(projectIndex);
                 currentMilestone = project.milestones[project.currentMilestoneIndex];
                 currentMilestone.funderAddresses.push(msg.sender);
                 currentMilestone.funders[msg.sender] += surplus;
@@ -161,15 +158,16 @@ contract CrowdSourcing {
         }
 
         emit ProjectFunded(
-            _projectIdx,
+            projectIndex,
             msg.value,
             project.totalFunded,
             currentMilestone.totalFunded
         );
     }
 
-    function checkCurrentMilestone(uint _projectIdx) external {
-        Project storage project = projects[_projectIdx];
+    function checkCurrentMilestone(uint projectIndex) external {
+        require(projectIndex < projects.length, "Invalid projects index");
+        Project storage project = projects[projectIndex];
         require(project.isActive, "Project must be active");
         Milestone storage currentMilestone = project.milestones[
             project.currentMilestoneIndex
@@ -185,8 +183,8 @@ contract CrowdSourcing {
     }
 
     //this function will be used only to move onto next milestone once one was completed
-    function initiateNextMilestone(uint _projectIdx) private {
-        Project storage project = projects[_projectIdx];
+    function initiateNextMilestone(uint projectIndex) private {
+        Project storage project = projects[projectIndex];
         Milestone storage currentMilestone = project.milestones[
             project.currentMilestoneIndex
         ];
@@ -207,7 +205,7 @@ contract CrowdSourcing {
             }
         } else {
             // cancel if milestone not reached after timestamp
-            stopProjectHelper(_projectIdx);
+            stopProjectHelper(projectIndex);
         }
     }
 
@@ -219,9 +217,9 @@ contract CrowdSourcing {
         require(success, "Transfer to creator failed");
     }
 
-    function refundMilestone(uint _projectIdx, uint _milestoneIdx) private {
-        Project storage project = projects[_projectIdx];
-        Milestone storage milestone = project.milestones[_milestoneIdx];
+    function refundMilestone(uint projectIndex, uint milestoneIdx) private {
+        Project storage project = projects[projectIndex];
+        Milestone storage milestone = project.milestones[milestoneIdx];
 
         for (uint i = 0; i < milestone.funderAddresses.length; i++) {
             address funder = milestone.funderAddresses[i];
@@ -235,33 +233,107 @@ contract CrowdSourcing {
         }
     }
 
-    function getCurrentMilestoneFunders(uint _projectIdx) public view returns (MilestoneInfo memory) {
-        Project storage project = projects[_projectIdx];
-        require(project.isActive, "Cannot view inactive project");
-        return project.milestones[project.currentMilestoneIndex].info ;
-    }
-
     // To stop projects that the sysOwner deems as scams/illega/whatever
     // or for when project owners realize they aren't feasible or smt idk
-    function stopProject(uint _projectIdx) external {
+    function stopProject(uint projectIndex) external {
         require(
             msg.sender == sysOwner ||
-                msg.sender == projects[_projectIdx].creator,
+                msg.sender == projects[projectIndex].creator,
             "Only system owner or project owner can stop projects"
         );
-        stopProjectHelper(_projectIdx);
+        stopProjectHelper(projectIndex);
     }
 
-    function stopProjectHelper(uint _projectIdx) private {
-        Project storage project = projects[_projectIdx];
+    function stopProjectHelper(uint projectIndex) private {
+        Project storage project = projects[projectIndex];
         require(project.isActive, "Cannot stop inactive project");
         project.isActive = false;
-        refundMilestone(_projectIdx, project.currentMilestoneIndex);
+        refundMilestone(projectIndex, project.currentMilestoneIndex);
     }
 
-    /*
-    TODO LIST:
-    - daug kitu dalyku. visa logika
-    - pratestuot ar tai kas egizstuoja veikia lmao
-    */
+    function addNewMilestones(uint projectIndex, MilestoneInfo[] memory milestones) public {
+        require(projectIndex < projects.length, "Invalid projects index");
+        Project storage project = projects[projectIndex];
+        require(project.isActive, "Cannot add new milestones to inactive project");
+        require(project.creator == msg.sender, "Only project creator can add new milestones");
+        require(milestones.length > 0, "Must have at least one milestone");
+        for(uint i=0; i<milestones.length; i++) {   
+            require(milestones[i].goalAmount > 0, "Goal amount can't be 0");
+            require(
+                milestones[i].deadline > block.timestamp,
+                "Deadline can't be in the past"
+            );
+            if(i > 0){
+                require(milestones[i].goalAmount > milestones[i-1].goalAmount, "Milestone goals should be increasing");
+                require(milestones[i].deadline > milestones[i-1].deadline, "Milestone deadlines should be increasing");
+            }
+            if(project.milestones.length > 0) {
+                require(milestones[i].goalAmount > project.milestones[project.milestones.length-1].info.goalAmount, "Milestone goals should be increasing");
+                require(milestones[i].deadline > project.milestones[project.milestones.length-1].info.deadline, "Milestone deadlines should be increasing");
+            }
+            Milestone storage milestone = project.milestones.push();
+            milestone.info.goalAmount = milestones[i].goalAmount;
+            milestone.info.deadline = milestones[i].deadline;
+            milestone.totalFunded = 0;
+            milestone.reached = false;
+        }
+    }
+
+    //getters
+    function getCurrentMilestoneInfo(uint projectIndex) external view returns (MilestoneInfo memory) {
+        require(projectIndex < projects.length, "Invalid projects index");
+        Project storage project = projects[projectIndex];
+        return project.milestones[project.currentMilestoneIndex].info;
+    }
+
+    function getCurrentMilestoneFunders(uint projectIndex) external view returns(address[] memory) {
+        Project storage project = projects[projectIndex];
+        Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
+        return currentMilestone.funderAddresses;
+    }
+
+    function getallMilestonesInfo(uint projectIndex) external view returns (MilestoneInfo[] memory) {
+        require(projectIndex < projects.length, "Invalid projects index");
+        Project storage project = projects[projectIndex];
+        MilestoneInfo[] memory milestoneInfo = new MilestoneInfo[](project.milestones.length);
+        for(uint i=0; i < project.milestones.length; i++) {
+            milestoneInfo[i] = project.milestones[i].info;
+        }       
+        return milestoneInfo;
+    }
+
+    function getAllActiveProjects() external view returns (ProjectView[] memory) {
+        uint activeProjectsCount = 0;
+        for (uint i = 0; i < projects.length; i++) {
+            if (projects[i].isActive) {
+                activeProjectsCount++;
+            }
+        }
+
+        ProjectView[] memory tempProjects = new ProjectView[](activeProjectsCount);
+
+        uint index=0;
+        for(uint i=0; i<projects.length; i++){
+            if(projects[i].isActive) {
+                ProjectView memory tempProject;
+                tempProject.creator = projects[i].creator;
+                tempProject.name = projects[i].name;
+                tempProject.headerImageUrl = projects[i].headerImageUrl;
+                tempProject.description = projects[i].description;
+                tempProject.totalFunded = projects[i].totalFunded;
+                tempProject.currentMilestoneIndex = projects[i].currentMilestoneIndex;
+                tempProject.isActive = projects[i].isActive;
+                tempProjects[index] = tempProject;
+                index++;
+            }
+        }
+        return tempProjects;
+    }
 }
+
+
+
+
+
+
+  

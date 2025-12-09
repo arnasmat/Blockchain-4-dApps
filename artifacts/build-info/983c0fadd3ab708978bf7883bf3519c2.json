@@ -1,0 +1,583 @@
+{
+	"id": "983c0fadd3ab708978bf7883bf3519c2",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.30",
+	"solcLongVersion": "0.8.30+commit.73712a01",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/structs.sol": {
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\nstruct Project {\r\n    address creator;\r\n    string name;\r\n    string headerImageUrl;\r\n    string description;\r\n    uint totalFunded;\r\n    uint currentMilestoneIndex;\r\n    Milestone[] milestones;\r\n    bool isActive; // i.e. not cancelled\r\n}\r\n\r\nstruct Milestone {\r\n    MilestoneInfo info;\r\n    uint totalFunded; // only current milestone total funded, used to transfer money to owner only lol\r\n    address[] funderAddresses;\r\n    mapping(address => uint) funders; // adress amount funded\r\n    bool reached;\r\n}\r\n\r\nstruct MilestoneInfo {\r\n    uint goalAmount;\r\n    uint deadline;\r\n}"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"sources": {
+			"contracts/structs.sol": {
+				"ast": {
+					"absolutePath": "contracts/structs.sol",
+					"exportedSymbols": {
+						"Milestone": [
+							35
+						],
+						"MilestoneInfo": [
+							40
+						],
+						"Project": [
+							20
+						]
+					},
+					"id": 41,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".20"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "33:24:0"
+						},
+						{
+							"canonicalName": "Project",
+							"id": 20,
+							"members": [
+								{
+									"constant": false,
+									"id": 3,
+									"mutability": "mutable",
+									"name": "creator",
+									"nameLocation": "91:7:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "83:15:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_address",
+										"typeString": "address"
+									},
+									"typeName": {
+										"id": 2,
+										"name": "address",
+										"nodeType": "ElementaryTypeName",
+										"src": "83:7:0",
+										"stateMutability": "nonpayable",
+										"typeDescriptions": {
+											"typeIdentifier": "t_address",
+											"typeString": "address"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 5,
+									"mutability": "mutable",
+									"name": "name",
+									"nameLocation": "112:4:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "105:11:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_string_storage_ptr",
+										"typeString": "string"
+									},
+									"typeName": {
+										"id": 4,
+										"name": "string",
+										"nodeType": "ElementaryTypeName",
+										"src": "105:6:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_string_storage_ptr",
+											"typeString": "string"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 7,
+									"mutability": "mutable",
+									"name": "headerImageUrl",
+									"nameLocation": "130:14:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "123:21:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_string_storage_ptr",
+										"typeString": "string"
+									},
+									"typeName": {
+										"id": 6,
+										"name": "string",
+										"nodeType": "ElementaryTypeName",
+										"src": "123:6:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_string_storage_ptr",
+											"typeString": "string"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 9,
+									"mutability": "mutable",
+									"name": "description",
+									"nameLocation": "158:11:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "151:18:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_string_storage_ptr",
+										"typeString": "string"
+									},
+									"typeName": {
+										"id": 8,
+										"name": "string",
+										"nodeType": "ElementaryTypeName",
+										"src": "151:6:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_string_storage_ptr",
+											"typeString": "string"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 11,
+									"mutability": "mutable",
+									"name": "totalFunded",
+									"nameLocation": "181:11:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "176:16:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 10,
+										"name": "uint",
+										"nodeType": "ElementaryTypeName",
+										"src": "176:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 13,
+									"mutability": "mutable",
+									"name": "currentMilestoneIndex",
+									"nameLocation": "204:21:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "199:26:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 12,
+										"name": "uint",
+										"nodeType": "ElementaryTypeName",
+										"src": "199:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 17,
+									"mutability": "mutable",
+									"name": "milestones",
+									"nameLocation": "244:10:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "232:22:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_array$_t_struct$_Milestone_$35_storage_$dyn_storage_ptr",
+										"typeString": "struct Milestone[]"
+									},
+									"typeName": {
+										"baseType": {
+											"id": 15,
+											"nodeType": "UserDefinedTypeName",
+											"pathNode": {
+												"id": 14,
+												"name": "Milestone",
+												"nameLocations": [
+													"232:9:0"
+												],
+												"nodeType": "IdentifierPath",
+												"referencedDeclaration": 35,
+												"src": "232:9:0"
+											},
+											"referencedDeclaration": 35,
+											"src": "232:9:0",
+											"typeDescriptions": {
+												"typeIdentifier": "t_struct$_Milestone_$35_storage_ptr",
+												"typeString": "struct Milestone"
+											}
+										},
+										"id": 16,
+										"nodeType": "ArrayTypeName",
+										"src": "232:11:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_array$_t_struct$_Milestone_$35_storage_$dyn_storage_ptr",
+											"typeString": "struct Milestone[]"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 19,
+									"mutability": "mutable",
+									"name": "isActive",
+									"nameLocation": "266:8:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 20,
+									"src": "261:13:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_bool",
+										"typeString": "bool"
+									},
+									"typeName": {
+										"id": 18,
+										"name": "bool",
+										"nodeType": "ElementaryTypeName",
+										"src": "261:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_bool",
+											"typeString": "bool"
+										}
+									},
+									"visibility": "internal"
+								}
+							],
+							"name": "Project",
+							"nameLocation": "68:7:0",
+							"nodeType": "StructDefinition",
+							"scope": 41,
+							"src": "61:239:0",
+							"visibility": "public"
+						},
+						{
+							"canonicalName": "Milestone",
+							"id": 35,
+							"members": [
+								{
+									"constant": false,
+									"id": 23,
+									"mutability": "mutable",
+									"name": "info",
+									"nameLocation": "342:4:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 35,
+									"src": "328:18:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_struct$_MilestoneInfo_$40_storage_ptr",
+										"typeString": "struct MilestoneInfo"
+									},
+									"typeName": {
+										"id": 22,
+										"nodeType": "UserDefinedTypeName",
+										"pathNode": {
+											"id": 21,
+											"name": "MilestoneInfo",
+											"nameLocations": [
+												"328:13:0"
+											],
+											"nodeType": "IdentifierPath",
+											"referencedDeclaration": 40,
+											"src": "328:13:0"
+										},
+										"referencedDeclaration": 40,
+										"src": "328:13:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_struct$_MilestoneInfo_$40_storage_ptr",
+											"typeString": "struct MilestoneInfo"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 25,
+									"mutability": "mutable",
+									"name": "totalFunded",
+									"nameLocation": "358:11:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 35,
+									"src": "353:16:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 24,
+										"name": "uint",
+										"nodeType": "ElementaryTypeName",
+										"src": "353:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 28,
+									"mutability": "mutable",
+									"name": "funderAddresses",
+									"nameLocation": "467:15:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 35,
+									"src": "457:25:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+										"typeString": "address[]"
+									},
+									"typeName": {
+										"baseType": {
+											"id": 26,
+											"name": "address",
+											"nodeType": "ElementaryTypeName",
+											"src": "457:7:0",
+											"stateMutability": "nonpayable",
+											"typeDescriptions": {
+												"typeIdentifier": "t_address",
+												"typeString": "address"
+											}
+										},
+										"id": 27,
+										"nodeType": "ArrayTypeName",
+										"src": "457:9:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+											"typeString": "address[]"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 32,
+									"mutability": "mutable",
+									"name": "funders",
+									"nameLocation": "514:7:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 35,
+									"src": "489:32:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+										"typeString": "mapping(address => uint256)"
+									},
+									"typeName": {
+										"id": 31,
+										"keyName": "",
+										"keyNameLocation": "-1:-1:-1",
+										"keyType": {
+											"id": 29,
+											"name": "address",
+											"nodeType": "ElementaryTypeName",
+											"src": "497:7:0",
+											"typeDescriptions": {
+												"typeIdentifier": "t_address",
+												"typeString": "address"
+											}
+										},
+										"nodeType": "Mapping",
+										"src": "489:24:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+											"typeString": "mapping(address => uint256)"
+										},
+										"valueName": "",
+										"valueNameLocation": "-1:-1:-1",
+										"valueType": {
+											"id": 30,
+											"name": "uint",
+											"nodeType": "ElementaryTypeName",
+											"src": "508:4:0",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											}
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 34,
+									"mutability": "mutable",
+									"name": "reached",
+									"nameLocation": "557:7:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 35,
+									"src": "552:12:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_bool",
+										"typeString": "bool"
+									},
+									"typeName": {
+										"id": 33,
+										"name": "bool",
+										"nodeType": "ElementaryTypeName",
+										"src": "552:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_bool",
+											"typeString": "bool"
+										}
+									},
+									"visibility": "internal"
+								}
+							],
+							"name": "Milestone",
+							"nameLocation": "311:9:0",
+							"nodeType": "StructDefinition",
+							"scope": 41,
+							"src": "304:264:0",
+							"visibility": "public"
+						},
+						{
+							"canonicalName": "MilestoneInfo",
+							"id": 40,
+							"members": [
+								{
+									"constant": false,
+									"id": 37,
+									"mutability": "mutable",
+									"name": "goalAmount",
+									"nameLocation": "605:10:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 40,
+									"src": "600:15:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 36,
+										"name": "uint",
+										"nodeType": "ElementaryTypeName",
+										"src": "600:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "internal"
+								},
+								{
+									"constant": false,
+									"id": 39,
+									"mutability": "mutable",
+									"name": "deadline",
+									"nameLocation": "627:8:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 40,
+									"src": "622:13:0",
+									"stateVariable": false,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 38,
+										"name": "uint",
+										"nodeType": "ElementaryTypeName",
+										"src": "622:4:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "internal"
+								}
+							],
+							"name": "MilestoneInfo",
+							"nameLocation": "579:13:0",
+							"nodeType": "StructDefinition",
+							"scope": 41,
+							"src": "572:67:0",
+							"visibility": "public"
+						}
+					],
+					"src": "33:606:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

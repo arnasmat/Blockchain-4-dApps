@@ -47,7 +47,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "projectIdx",
+						"name": "projectIndex",
 						"type": "uint256"
 					}
 				],
@@ -60,7 +60,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "projectIdx",
+						"name": "projectIndex",
 						"type": "uint256"
 					},
 					{
@@ -89,7 +89,37 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_projectIdx",
+						"name": "projectIndex",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "goalAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deadline",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct MilestoneInfo[]",
+						"name": "milestones",
+						"type": "tuple[]"
+					}
+				],
+				"name": "addNewMilestones",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectIndex",
 						"type": "uint256"
 					}
 				],
@@ -102,17 +132,17 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "_name",
+						"name": "name",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "_headerImageUrl",
+						"name": "headerImageUrl",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "_description",
+						"name": "description",
 						"type": "string"
 					},
 					{
@@ -129,7 +159,7 @@
 							}
 						],
 						"internalType": "struct MilestoneInfo[]",
-						"name": "_milestones",
+						"name": "milestones",
 						"type": "tuple[]"
 					}
 				],
@@ -142,7 +172,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_projectIdx",
+						"name": "projectIndex",
 						"type": "uint256"
 					}
 				],
@@ -152,14 +182,83 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getAllActiveProjects",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "headerImageUrl",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalFunded",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "currentMilestoneIndex",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct ProjectView[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_projectIdx",
+						"name": "projectIndex",
 						"type": "uint256"
 					}
 				],
 				"name": "getCurrentMilestoneFunders",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "getCurrentMilestoneInfo",
 				"outputs": [
 					{
 						"components": [
@@ -177,6 +276,37 @@
 						"internalType": "struct MilestoneInfo",
 						"name": "",
 						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "getallMilestonesInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "goalAmount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deadline",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct MilestoneInfo[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "view",
@@ -235,7 +365,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_projectIdx",
+						"name": "projectIndex",
 						"type": "uint256"
 					}
 				],
@@ -286,11 +416,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0x6765f82803c8bccde0eafd7d3cae45f54b026f983d66a93c2df32aae55a69e25",
+			"keccak256": "0xfae5b6c473856c70244f85996333ea8c281cdffd63d66053139cd6c4422f312d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7ce52abfc9bdb4bc231e07a3d53dfb2c0f1b0993d7426e13754655afdfda95fb",
-				"dweb:/ipfs/QmVgZadjVFrkvfxak71x9sCNBjH32oGHGCfTNoteomaY1K"
+				"bzz-raw://120f225c476c1cb8fb94eb4392b06b3ccb06d993113ef57795de6fc41c77f31c",
+				"dweb:/ipfs/QmdvT3QVHMxsDYLQkQe6ehjXPRBpLrgwsXu7J88rrwhLK4"
 			]
 		}
 	},
