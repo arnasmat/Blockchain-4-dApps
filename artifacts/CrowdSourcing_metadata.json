@@ -169,6 +169,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "deactivateProjectsWithExpiredDeadlines",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -416,11 +423,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0xfae5b6c473856c70244f85996333ea8c281cdffd63d66053139cd6c4422f312d",
+			"keccak256": "0xc35ebe1aca077bd3780ae3e21ee1a0ab1227f478879af82b66b113cefbee6c2f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://120f225c476c1cb8fb94eb4392b06b3ccb06d993113ef57795de6fc41c77f31c",
-				"dweb:/ipfs/QmdvT3QVHMxsDYLQkQe6ehjXPRBpLrgwsXu7J88rrwhLK4"
+				"bzz-raw://adf1796f667bdd4ebdada9a5fba7a227481ed910c19efe6be05f7c20436e1ee0",
+				"dweb:/ipfs/QmPcRmmJL3oDfrhvmFDqGeKEcJ9Agr2CFh8wGAEc8zquPD"
 			]
 		}
 	},

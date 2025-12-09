@@ -106,7 +106,7 @@ contract CrowdSourcing {
 
         addNewMilestones(projects.length-1 , milestones);
 
-        emit ProjectCreated(projects.length);
+        emit ProjectCreated(projects.length-1);
     }
 
     function fundProject(uint projectIndex) external payable {
@@ -229,6 +229,8 @@ contract CrowdSourcing {
                 milestone.funders[funder] = 0;
                 (bool success, ) = funder.call{value: amount}("");
                 require(success, "Refund failed");
+                project.totalFunded -= amount;
+                milestone.totalFunded -= amount;
             }
         }
     }
@@ -276,6 +278,17 @@ contract CrowdSourcing {
             milestone.info.deadline = milestones[i].deadline;
             milestone.totalFunded = 0;
             milestone.reached = false;
+        }
+    }
+
+    function deactivateProjectsWithExpiredDeadlines() external {
+        require(msg.sender == sysOwner, "Only sysOwner can deactivate projects");
+        for(uint i=0; i < projects.length; i++) {
+            Project storage project = projects[i];
+            Milestone storage currentMilestone = project.milestones[project.currentMilestoneIndex];
+            if(project.isActive && currentMilestone.info.deadline < block.timestamp) {
+                stopProjectHelper(i);
+            }
         }
     }
 
