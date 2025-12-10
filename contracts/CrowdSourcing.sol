@@ -79,6 +79,10 @@ contract CrowdSourcing {
         uint currentMileStoneTotalFunded
     );
 
+    event ProjectStatus(
+        bool isActive
+    );
+
     address public sysOwner;
 
     Project[] public projects;
@@ -293,9 +297,21 @@ contract CrowdSourcing {
     }
 
     //getters
-    function getCurrentMilestoneInfo(uint projectIndex) external view returns (MilestoneInfo memory) {
+    function getProjectInfo(uint projectIndex) public {
         require(projectIndex < projects.length, "Invalid projects index");
         Project storage project = projects[projectIndex];
+        if(project.milestones[project.currentMilestoneIndex].info.deadline < block.timestamp && project.isActive){
+            stopProjectHelper(projectIndex);
+        }
+        emit ProjectStatus(project.isActive);
+    }
+
+    function getCurrentMilestoneInfo(uint projectIndex) public returns (MilestoneInfo memory) {
+        require(projectIndex < projects.length, "Invalid projects index");
+        Project storage project = projects[projectIndex];
+        if(project.milestones[project.currentMilestoneIndex].info.deadline < block.timestamp && project.isActive){
+            stopProjectHelper(projectIndex);
+        }
         return project.milestones[project.currentMilestoneIndex].info;
     }
 
