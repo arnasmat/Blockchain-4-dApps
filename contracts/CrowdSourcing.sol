@@ -47,6 +47,7 @@ struct ProjectView {
     uint totalFunded;
     uint currentMilestoneIndex;
     bool isActive;
+    uint index;
 }
 
 struct Milestone {
@@ -352,6 +353,7 @@ contract CrowdSourcing {
                 tempProject.totalFunded = projects[i].totalFunded;
                 tempProject.currentMilestoneIndex = projects[i].currentMilestoneIndex;
                 tempProject.isActive = projects[i].isActive;
+                tempProject.index = i;
                 tempProjects[index] = tempProject;
                 index++;
             }
