@@ -304,6 +304,15 @@ contract CrowdSourcing {
         if(project.milestones[project.currentMilestoneIndex].info.deadline < block.timestamp && project.isActive){
             stopProjectHelper(projectIndex);
         }
+        ProjectView memory tempProject;
+        tempProject.creator = projects[projectIndex].creator;
+        tempProject.name = projects[projectIndex].name;
+        tempProject.headerImageUrl = projects[projectIndex].headerImageUrl;
+        tempProject.description = projects[projectIndex].description;
+        tempProject.totalFunded = projects[projectIndex].totalFunded;
+        tempProject.currentMilestoneIndex = projects[projectIndex].currentMilestoneIndex;
+        tempProject.isActive = projects[projectIndex].isActive;
+        tempProject.index = projectIndex;
         emit ProjectStatus(project.isActive);
     }
 
