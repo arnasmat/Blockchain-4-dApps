@@ -37,6 +37,7 @@ struct Project {
     uint currentMilestoneIndex;
     Milestone[] milestones;
     bool isActive; // i.e. not cancelled
+    bool over;
 }
 
 struct ProjectView {
@@ -47,7 +48,16 @@ struct ProjectView {
     uint totalFunded;
     uint currentMilestoneIndex;
     bool isActive;
+    bool over;
     uint index;
+}
+
+struct MilestoneView {
+    uint goalAmount;
+    uint deadline;
+    uint index;
+    uint totalFunded;
+
 }
 
 struct Milestone {
@@ -108,6 +118,7 @@ contract CrowdSourcing {
         project.totalFunded = 0;
         project.currentMilestoneIndex = 0;
         project.isActive = true;
+        project.over = false;
 
         addNewMilestones(projects.length-1 , milestones);
 
@@ -121,6 +132,7 @@ contract CrowdSourcing {
             "You dont have enough money to fund"
         );
         require(msg.value > 0, "Fund amount can't be 0");
+        getProjectInfo(projectIndex);
 
         Project storage project = projects[projectIndex];
         require(project.isActive, "Project must be active to fund");
@@ -172,6 +184,7 @@ contract CrowdSourcing {
 
     function checkCurrentMilestone(uint projectIndex) external {
         require(projectIndex < projects.length, "Invalid projects index");
+
         Project storage project = projects[projectIndex];
         require(project.isActive, "Project must be active");
         Milestone storage currentMilestone = project.milestones[
@@ -207,6 +220,7 @@ contract CrowdSourcing {
             } else {
                 // project is "done" after being fully funded
                 project.isActive = false;
+                project.over = true;
             }
         } else {
             // cancel if milestone not reached after timestamp
@@ -298,7 +312,7 @@ contract CrowdSourcing {
     }
 
     //getters
-    function getProjectInfo(uint projectIndex) public {
+    function getProjectInfo(uint projectIndex) public returns (ProjectView memory) {
         require(projectIndex < projects.length, "Invalid projects index");
         Project storage project = projects[projectIndex];
         if(project.milestones[project.currentMilestoneIndex].info.deadline < block.timestamp && project.isActive){
@@ -312,8 +326,10 @@ contract CrowdSourcing {
         tempProject.totalFunded = projects[projectIndex].totalFunded;
         tempProject.currentMilestoneIndex = projects[projectIndex].currentMilestoneIndex;
         tempProject.isActive = projects[projectIndex].isActive;
+        tempProject.over = projects[projectIndex].over;
         tempProject.index = projectIndex;
         emit ProjectStatus(project.isActive);
+        return tempProject;
     }
 
     function getCurrentMilestoneInfo(uint projectIndex) public returns (MilestoneInfo memory) {
@@ -362,6 +378,7 @@ contract CrowdSourcing {
                 tempProject.totalFunded = projects[i].totalFunded;
                 tempProject.currentMilestoneIndex = projects[i].currentMilestoneIndex;
                 tempProject.isActive = projects[i].isActive;
+                tempProject.over = projects[i].over;
                 tempProject.index = i;
                 tempProjects[index] = tempProject;
                 index++;

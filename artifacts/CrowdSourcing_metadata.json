@@ -86,6 +86,19 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					}
+				],
+				"name": "ProjectStatus",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -228,6 +241,16 @@
 								"internalType": "bool",
 								"name": "isActive",
 								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "over",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "index",
+								"type": "uint256"
 							}
 						],
 						"internalType": "struct ProjectView[]",
@@ -285,7 +308,73 @@
 						"type": "tuple"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "projectIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "getProjectInfo",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "headerImageUrl",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalFunded",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "currentMilestoneIndex",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "over",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "index",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct ProjectView",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -363,6 +452,11 @@
 						"internalType": "bool",
 						"name": "isActive",
 						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "over",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -423,11 +517,11 @@
 	},
 	"sources": {
 		"contracts/CrowdSourcing.sol": {
-			"keccak256": "0xc35ebe1aca077bd3780ae3e21ee1a0ab1227f478879af82b66b113cefbee6c2f",
+			"keccak256": "0xe968da83fd65d9f298bdc6794139be13b550c06d1a34ef995a12f0b9e02dcc2a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://adf1796f667bdd4ebdada9a5fba7a227481ed910c19efe6be05f7c20436e1ee0",
-				"dweb:/ipfs/QmPcRmmJL3oDfrhvmFDqGeKEcJ9Agr2CFh8wGAEc8zquPD"
+				"bzz-raw://93e057f93750bb2c260015ab9a9ba164a626cb9e499ff74cccc2fd4523e4f66b",
+				"dweb:/ipfs/QmSm4jrEsQcCNtXBHXrvuWsV8hxZSEbWNuWeLWuLNwU5xn"
 			]
 		}
 	},
