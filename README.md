@@ -1,6 +1,12 @@
 # dCrowd
 dCrowd is a decentralized ethereum smart contract-based crowdfunding/crowdsourcing application with an [Android application for a frontend](https://github.com/arnasmat/dCrowd/tree/main)
 
+<img width="250" alt="Multiple projects in the list screen" src="https://github.com/user-attachments/assets/4cdc41ac-2c07-4628-a59d-99c21922c4f6" />
+<img width="250" alt="Project creation screen" src="https://github.com/user-attachments/assets/1c066e6b-68ba-4383-bd6d-63a990700ed2" />
+<img width="250" alt="Halfway funded project" src="https://github.com/user-attachments/assets/2c4e0285-fb8a-41a4-8391-7412fbeb0545" />
+
+(Photos from the [android application repo](https://github.com/arnasmat/dCrowd/tree/main). More photos there.)
+
 # Working principles
 The dCrowd application works on these key principles:
 - There is one general system owner who launched the contract and can stop projects abruptly. This is to prevent malicious users from abusing the platform in case of scams or illegal activity.
