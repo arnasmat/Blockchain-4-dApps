@@ -124,12 +124,14 @@ contract CrowdSourcing {
             msg.value <= msg.sender.balance,
             "You dont have enough money to fund"
         );
-        require(msg.value > 0, "Fund amount can't be 0");
         getProjectInfo(projectIndex);
 
         Project storage project = projects[projectIndex];
-        require(project.isActive, "Project must be active to fund");
-
+        if(!project.isActive) {
+            return;
+        }
+        require(msg.sender !=  project.creator, "Project creator cannot fund its own projects");
+        require(msg.value > 0, "Fund amount can't be 0");
         Milestone storage currentMilestone = project.milestones[
             project.currentMilestoneIndex
         ];
@@ -437,8 +439,7 @@ contract CrowdSourcing {
                 tempProject.headerImageUrl = projects[i].headerImageUrl;
                 tempProject.description = projects[i].description;
                 tempProject.totalFunded = projects[i].totalFunded;
-                tempProject.currentMilestoneIndex = projects[i]
-                    .currentMilestoneIndex;
+                tempProject.currentMilestoneIndex = projects[i].currentMilestoneIndex;
                 tempProject.isActive = projects[i].isActive;
                 tempProject.index = i;
                 tempProjects[index] = tempProject;
