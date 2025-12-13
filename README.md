@@ -9,6 +9,7 @@ dCrowd is a decentralized ethereum smart contract-based crowdfunding/crowdsourci
 
 # Smart contract business model sequence diagram
 <img width="858" height="1332" alt="image" src="https://github.com/user-attachments/assets/f828ef38-a912-42d4-af40-bfb3813fcee0" />
+
 # Smart contract business model overview
 There are 4 types of entities in our business model of crowdfunding smart contract:
    - System owner is the person who deployed the smart contract and can stop any project, but not create one. There is only one system owner in our scenario.
