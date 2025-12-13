@@ -1,31 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
-/*
-    Crowdsourcing with milestones, expected logic:
-    - There is a general system owner, who owns the crowdsourcing "page"
-    - Users can create projects, which other users can fund:
-    - Those projects have milestones, upon reaching a certain milestone by a certain date,
-    the project creator receives the money. Else (if it's not reached by a certain date),
-    all investors are refunded.
-
-    E.g. PC1 creates a project "Cool project" with 3 milestones:
-    100 euros by Nov 20
-    1000 eur by Nov 30
-    10000 eur by Dec 30
-
-    Nov 18
-    F1 funds 50 eur, F2 funds 25 eur, F3 Funds 26 Eur
-    Nov 19
-    F4 funds 50 eur
-    Nov 20
-    Check for milestone 1 deadline, reached. PC1 gets 151 eur. project not cancelled
-    Nov 29
-    F1 funds 500 eur, F2 funds 9 eur
-    Nov 30
-    Check for milestone 2 deadline - not reached. Project cancelled.
-    F1 gets 500 eur back, F2 gets 9 eur back, F3, F4 get nothing back.
-    PC1 keeps 101 eur from before.
-*/
 
 struct Project {
     address creator;
