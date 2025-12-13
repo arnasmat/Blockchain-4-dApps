@@ -7,9 +7,10 @@ dCrowd is a decentralized ethereum smart contract-based crowdfunding/crowdsourci
 
 (Photos from the [android application repo](https://github.com/arnasmat/dCrowd/tree/main). More photos there.)
 
-# Smart contract business model
+# Smart contract business model sequence diagram
 <img width="858" height="1332" alt="image" src="https://github.com/user-attachments/assets/f828ef38-a912-42d4-af40-bfb3813fcee0" />
-There are 4 types of entities in our business model of crowdfunding smart contract
+# Smart contract business model overview
+There are 4 types of entities in our business model of crowdfunding smart contract:
    - System owner is the person who deployed the smart contract and can stop any project, but not create one. There is only one system owner in our scenario.
    - Smart contract runs on the blockchain. It can create and store project classes and hold data about them, including milestones goal amounts with deadlines, accounts who created the project, who funded it and how much money each account spend on that particular project. It stores funds and can return the back to senders (only latest milestone) if project was cancelled or transfer funds to the project creator after completing milestone on time.
    - Project owner is an account which sucessfule create project(s) using createProject() function. That person receives funds after each completed milestone on time and can cancel their project, but cannot fund it. If they cancel project, the funds of latest milestone are given back to the funder.
