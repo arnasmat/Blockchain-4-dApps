@@ -27,6 +27,7 @@ Alternatively, deploy it on the Ethereum test network
 
 
 ## Useful commands for testing
+(Note: if ganache-cli is hosted not on localhost, you may have to change the url)
 Increase time by 1 day
 ```
 curl -X POST --data '{"jsonrpc":"2.0","method":"evm_increaseTime","params":[1728000],"id":1}' http://localhost:8545
