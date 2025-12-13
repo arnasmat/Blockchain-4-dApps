@@ -1,5 +1,5 @@
 # dCrowd
-dCrowd is a decentralized ethereum smart contract-based crowdfunding/crowdsourcing application.
+dCrowd is a decentralized ethereum smart contract-based crowdfunding/crowdsourcing application with an [Android application for a frontend](https://github.com/arnasmat/dCrowd/tree/main)
 
 # Working principles
 The dCrowd application works on these key principles:
@@ -14,3 +14,13 @@ The dCrowd application works on these key principles:
 - If the last milestone is reached, the project is no longer active.
 - If funding causes a milestone to be exceeded, the surplus is automatically given to the next milestone (or is refunded if that was the last milestones).
 - Only active projects are shown in the app's "feed" and can be funded.
+
+# Set up (for testing)
+Prerequisites: set up [ganache-cli and truffle](https://archive.trufflesuite.com/docs/truffle/how-to/install/)
+1. Clone the repository
+
+2. Run `ganache-cli` in one terminal and `truffle migrate` in another in the cloned directory.
+
+Alternatively, deploy it on the Ethereum test network
+
+### We recommend interacting with the application via the [android application](https://github.com/arnasmat/dCrowd/tree/main)
