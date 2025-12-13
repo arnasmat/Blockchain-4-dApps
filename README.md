@@ -24,3 +24,15 @@ Prerequisites: set up [ganache-cli and truffle](https://archive.trufflesuite.com
 Alternatively, deploy it on the Ethereum test network
 
 ### We recommend interacting with the application via the [android application](https://github.com/arnasmat/dCrowd/tree/main)
+
+
+## Useful commands for testing
+Increase time by 1 day
+```
+curl -X POST --data '{"jsonrpc":"2.0","method":"evm_increaseTime","params":[1728000],"id":1}' http://localhost:8545
+```
+
+Mine a block
+```
+curl -X POST --data '{"jsonrpc":"2.0","method":"evm_mine","params":[],"id":1}' http://localhost:8545
+```
