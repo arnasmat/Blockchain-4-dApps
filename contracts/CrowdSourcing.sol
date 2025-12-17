@@ -102,6 +102,8 @@ contract CrowdSourcing {
 
         Project storage project = projects[projectIndex];
         if(!project.isActive) {
+            (bool success, ) = msg.sender.call{value: msg.value}("");
+            require(success, "Failed to return money");
             return;
         }
         require(msg.sender !=  project.creator, "Project creator cannot fund its own projects");
@@ -228,7 +230,7 @@ contract CrowdSourcing {
         }
     }
 
-    // To stop projects that the sysOwner deems as scams/illega/whatever
+    // To stop projects that the sysOwner deems as scams/illegal/whatever
     // or for when project owners realize they aren't feasible or smt idk
     function stopProject(uint projectIndex) external {
         require(
